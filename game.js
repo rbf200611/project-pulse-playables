@@ -39,8 +39,8 @@
   const PLAYER_X = 176;
   const PLAYER_W = 34;
   const PLAYER_H = 46;
-  const BASE_GRAVITY = 1880;
-  const JUMP_POWER = 670;
+  const BASE_GRAVITY = 1800;
+  const JUMP_POWER = 760;
   const COLORS = {
     cyan: '#55efff',
     magenta: '#ff43b8',
@@ -95,15 +95,15 @@
   const stages = [
     {
       name: 'FIRST CONTACT',
-      hint: 'Pulse through what should be impossible.',
+      hint: 'JUMP the first spikes. PULSE through the tall wall.',
       length: 4100,
       speed: 300,
       gravityFlip: false,
       obstacles: [
-        O(760,'wall',0,58,110), C(1040,0), O(1320,'spike',1,54,30),
-        O(1640,'wall',1,60,130), C(1870,1), O(2160,'spike',0,72,34),
-        O(2480,'wall',0,56,155), C(2750,0), O(3100,'wall',1,64,105),
-        O(3440,'spike',1,84,34), C(3710,1)
+        O(720,'spike',0,64,30), C(980,0), O(1260,'wall',0,64,190), C(1510,1),
+        O(1780,'spike',1,68,32), O(2070,'wall',1,60,160), C(2320,0),
+        O(2600,'spike',0,78,34), O(2940,'wall',0,60,175), C(3220,1),
+        O(3520,'spike',1,86,34), C(3820,1)
       ]
     },
     {
@@ -465,7 +465,7 @@
   }
 
   function handleCollisions() {
-    const pr = {x:player.x+5,y:player.y+5,w:PLAYER_W-10,h:PLAYER_H-10};
+    const pr = {x:player.x+7,y:player.y+7,w:PLAYER_W-14,h:PLAYER_H-14};
 
     for (const o of activeObstacles) {
       if (o.collected) continue;
