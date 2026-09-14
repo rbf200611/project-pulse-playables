@@ -1,0 +1,31 @@
+/* Alpha 0.6 polish layer */
+#game{object-fit:contain;object-position:center;background:#050713}
+.act-overlay{position:absolute;inset:0;z-index:17;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;opacity:0;transform:scale(1.04);background:radial-gradient(circle at center,rgba(11,18,38,.52),rgba(3,5,12,.74));backdrop-filter:blur(3px);transition:opacity .28s ease,transform .42s ease}
+.act-overlay.show{opacity:1;transform:scale(1)}
+.act-overlay small{font-size:.64rem;letter-spacing:.28em;font-weight:900;color:#9dcfff}
+.act-overlay strong{display:block;margin:5px 0 9px;font-size:clamp(2.7rem,7vw,6.2rem);line-height:.86;letter-spacing:-.06em;text-shadow:0 0 36px rgba(84,239,255,.25)}
+.act-overlay span{font-size:.78rem;letter-spacing:.08em;color:#c9d4e8}
+.first-run-guide{position:absolute;z-index:14;left:50%;bottom:92px;transform:translateX(-50%) translateY(8px);display:flex;gap:12px;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease}
+.first-run-guide.show{opacity:.9;transform:translateX(-50%) translateY(0)}
+.first-run-guide div{min-width:132px;padding:9px 13px;border:1px solid rgba(255,255,255,.15);border-radius:16px;background:rgba(3,7,16,.68);backdrop-filter:blur(12px);text-align:center;box-shadow:0 12px 36px rgba(0,0,0,.3)}
+.first-run-guide b{display:block;font-size:.56rem;letter-spacing:.12em;color:#96a8c8}
+.first-run-guide span{display:block;margin-top:2px;font-size:.76rem;font-weight:900;letter-spacing:.12em;color:#fff}
+.reduced-effects .pulse-flash{display:none!important}
+.reduced-effects .death-flash{transition:none!important}
+.reduced-effects .stage-banner,.reduced-effects .act-overlay,.reduced-effects .first-run-guide{transition:none!important}
+.reduced-effects .meter i{transition:none!important}
+#reduceFxBtn[aria-pressed="true"]{border-color:rgba(118,255,176,.45);color:#baffd2;background:rgba(118,255,176,.08)}
+@media (max-width:760px){
+  .game-card{aspect-ratio:9/14;background:#050713}
+  #game{width:100%;height:100%;object-fit:contain;object-position:center}
+  .first-run-guide{bottom:88px;width:calc(100% - 28px);gap:8px}
+  .first-run-guide div{flex:1;min-width:0;padding:8px 7px}
+  .act-overlay strong{font-size:clamp(3rem,14vw,5rem)}
+  .top-actions{gap:5px}
+  .top-actions button{padding:7px 8px}
+}
+@media (max-width:470px){
+  .brand strong{max-width:118px;overflow:hidden;text-overflow:ellipsis}
+  .top-actions button{font-size:.54rem;padding:7px 7px;letter-spacing:.04em}
+}
+@media (prefers-reduced-motion:reduce){.act-overlay,.first-run-guide{transition:none!important}}
