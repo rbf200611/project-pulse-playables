@@ -2,7 +2,7 @@ name: Validate Project Pulse RC
 
 on:
   push:
-    branches: [final-1.0]
+    branches: [main, final-1.0]
   pull_request:
     branches: [main]
 
@@ -21,12 +21,14 @@ jobs:
           node --check polish.js
           node --check final-act.js
           node --check progression-final.js
+          node --check rift-tutorial.js
       - name: Required files
         run: |
           test -f index.html
           test -f styles.css
           test -f polish.css
           test -f final.css
+          test -f rift-tutorial.js
           test -f RELEASE_CHECKLIST.md
       - name: Bundle budget
         run: |
