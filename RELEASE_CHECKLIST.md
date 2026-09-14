@@ -7,6 +7,7 @@
 - [x] 16-stage HUD/progression handoff
 - [x] Persistent ranks, best score, unlock progress and settings
 - [x] Continue campaign entry point for the second half
+- [x] Concise mechanic reveals for Orange Rift, Echo Drone, Blackout and Hunter Prime
 
 ## Platform
 - [x] YouTube SDK-first startup path
@@ -16,6 +17,7 @@
 - [x] System audio-state hooks
 - [x] firstFrameReady/gameReady calls
 - [x] Score submission hook
+- [x] Continue-campaign music user-gesture path
 
 ## Accessibility / UX
 - [x] Keyboard, pointer and touch controls
@@ -24,6 +26,14 @@
 - [x] Portrait-safe presentation without stretching the canvas
 - [x] First-run control guide
 - [x] Act transitions and stage ranks
+- [x] Short-screen/mobile menu safety
+
+## Release hygiene
+- [x] Legacy game.js and game-v2.js removed from release branch
+- [x] JavaScript syntax validation in GitHub Actions
+- [x] Required release-file checks
+- [x] Bundle-budget validation
+- [x] Relative-path validation
 
 ## Pre-submission checks still requiring the actual YouTube test environment
 - [ ] Run YouTube Playables certification/test suite
@@ -32,4 +42,4 @@
 - [ ] Verify final zipped bundle/file-name constraints
 - [ ] Address any reviewer/test-suite findings before submission
 
-The browser build can be playtested before these environment-specific checks. Do not treat this checklist as certification approval.
+The browser release candidate is feature-complete for final playtesting. The unchecked items require the actual YouTube Playables staging/certification environment and are not claims of certification approval.
