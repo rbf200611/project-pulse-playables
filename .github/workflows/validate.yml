@@ -35,4 +35,4 @@ jobs:
           test "$bytes" -lt 15728640
       - name: No absolute local asset paths
         run: |
-          ! grep -R -nE '(src|href)="/(?!/)' --include='*.html' --include='*.js' . || exit 1
+          ! grep -R -nE '(src|href)="/[^/]' --include='*.html' --include='*.js' . || exit 1
