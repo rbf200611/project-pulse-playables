@@ -97,17 +97,19 @@
     const combo = (comboLabel?.textContent || '').toUpperCase();
     const match = label.match(/STAGE\s+(\d+)/i);
     const stage = match ? Math.max(1, Number(match[1])) : (label.includes('ENDLESS') ? 6 : 1);
-    const boss = name.includes('HUNTER') || name.includes('SINGULARITY');
-    const blackout = name.includes('BLACKOUT');
+    const boss = name.includes('HUNTER') || name.includes('SINGULARITY') || name.includes('BREAKPOINT') || name.includes('EVENT HORIZON');
+    const blackout = name.includes('BLACKOUT') || name.includes('DEAD SIGNAL');
     const overdrive = combo.includes('OVERDRIVE');
-    let intensity = .24 + Math.min(7, stage - 1) * .085;
+    const firstArc = Math.min(7, Math.max(0, stage - 1));
+    const finalArc = Math.min(8, Math.max(0, stage - 8));
+    let intensity = .24 + firstArc * .085 + finalArc * .022;
     if (boss) intensity += .14;
     if (overdrive) intensity += .20;
     if (blackout) intensity -= .03;
     intensity = Math.max(.22, Math.min(1, intensity));
-    let bpm = 112 + Math.min(7, stage - 1) * 4;
-    if (boss) bpm += 6;
-    if (overdrive) bpm += 10;
+    let bpm = 112 + firstArc * 4 + finalArc;
+    if (boss) bpm += 4;
+    if (overdrive) bpm += 7;
     return { stage, boss, blackout, overdrive, intensity, bpm: Math.min(150, bpm) };
   }
 
@@ -385,6 +387,14 @@
       setTimeout(() => updateMaster(), 30);
     });
   });
+
+  // Continue controls are created after this script loads, so use delegation.
+  document.addEventListener('click', event => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target?.closest('#continueCampaign,#continueActThree')) return;
+    start();
+    setTimeout(() => updateMaster(), 30);
+  }, true);
 
   musicBtn?.addEventListener('click', () => {
     musicMuted = !musicMuted;
