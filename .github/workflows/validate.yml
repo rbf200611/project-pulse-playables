@@ -11,10 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: JavaScript syntax
         run: |
           node --check platform.js
           node --check loader.js
+          node --check audio-unlock.js
           node --check bootstrap.js
           node --check game-v3.js
           node --check music.js
@@ -22,26 +24,77 @@ jobs:
           node --check final-act.js
           node --check progression-final.js
           node --check rift-tutorial.js
+
       - name: Required release files
         run: |
           test -f index.html
           test -f styles.css
           test -f polish.css
           test -f final.css
+          test -f platform.js
+          test -f loader.js
+          test -f audio-unlock.js
           test -f rift-tutorial.js
           test -f RELEASE_CHECKLIST.md
           grep -q 'https://www.youtube.com/game_api/v1' index.html
           grep -q '<script src="platform.js"></script>' index.html
+          grep -q "'audio-unlock.js', 'bootstrap.js'" loader.js
           grep -q "'rift-tutorial.js'" loader.js
+
+      - name: YouTube SDK ordering
+        run: |
+          sdk_line=$(grep -n 'https://www.youtube.com/game_api/v1' index.html | head -1 | cut -d: -f1)
+          platform_line=$(grep -n '<script src="platform.js"></script>' index.html | head -1 | cut -d: -f1)
+          test -n "$sdk_line"
+          test -n "$platform_line"
+          test "$sdk_line" -lt "$platform_line"
+
+      - name: Playables lifecycle gates
+        run: |
+          ! grep -R -n "visibilitychange" --include='*.js' .
+          ! grep -R -n "document.hidden" --include='*.js' .
+          grep -q "pulse:system-pause" game-v3.js
+          grep -q "pulse:system-pause" final-act.js
+          grep -q "pulse:system-pause" music.js
+          grep -q "pulse:system-pause" polish.js
+          grep -q "pulse:system-pause" rift-tutorial.js
+          grep -q "platformAllowsAudio" audio-unlock.js
+          grep -q "systemAudioEnabled" game-v3.js
+          grep -q "systemAudioEnabled" final-act.js
+          grep -q "systemAudioEnabled" music.js
+          grep -q "pulse-system-paused" platform.js
+          grep -q "YOUTUBE_PLAYABLES_PAUSE_FREEZE" styles.css
+
+      - name: Playables UI rules
+        run: |
+          grep -q "youtube-playables" bootstrap.js
+          grep -q "quit.hidden = true" bootstrap.js
+          grep -q "quit.style.display = 'none'" bootstrap.js
+          grep -q "systemPaused" bootstrap.js
+
+      - name: SDK readiness and persistence
+        run: |
+          grep -q "loadData" platform.js
+          grep -q "saveData" platform.js
+          grep -q "firstFrameReady" platform.js
+          grep -q "gameReady" platform.js
+          grep -q "isAudioEnabled" platform.js
+          grep -q "onAudioEnabledChange" platform.js
+          grep -q "onPause" platform.js
+          grep -q "onResume" platform.js
+          grep -q "sendScore" platform.js
+
       - name: No legacy runtime files
         run: |
           test ! -f game.js
           test ! -f game-v2.js
+
       - name: Bundle budget
         run: |
           bytes=$(find . -type f -not -path './.git/*' -printf '%s\n' | awk '{s+=$1} END {print s+0}')
           echo "Uncompressed repository payload: $bytes bytes"
           test "$bytes" -lt 15728640
+
       - name: No absolute local asset paths
         run: |
           ! grep -R -nE '(src|href)="/[^/]' --include='*.html' --include='*.js' . || exit 1
