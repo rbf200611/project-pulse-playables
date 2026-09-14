@@ -1,6 +1,8 @@
 (() => {
   'use strict';
 
+  // CAMPAIGN_DURATION_TUNE_V1: +15% stage distance, +12% obstacle spacing.
+
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d', { alpha: false });
 
@@ -134,113 +136,113 @@
     {
       name: 'FIRST CONTACT',
       hint: 'JUMP the spikes. PULSE through the tall wall.',
-      length: 4000,
+      length: 4600,
       speed: 295,
       gravityFlip: false,
       obstacles: [
-        O(720, 'spike', 0, 64, 30), C(980, 0), O(1270, 'wall', 0, 64, 190), C(1515, 1),
-        O(1785, 'spike', 1, 70, 32), O(2055, 'wall', 1, 60, 158), C(2310, 0),
-        O(2580, 'spike', 0, 80, 34), O(2890, 'wall', 0, 60, 176), C(3170, 1),
-        O(3470, 'spike', 1, 88, 34), C(3750, 1)
+        O(806, 'spike', 0, 64, 30), C(1098, 0), O(1422, 'wall', 0, 64, 190), C(1697, 1),
+        O(1999, 'spike', 1, 70, 32), O(2302, 'wall', 1, 60, 158), C(2587, 0),
+        O(2890, 'spike', 0, 80, 34), O(3237, 'wall', 0, 60, 176), C(3550, 1),
+        O(3886, 'spike', 1, 88, 34), C(4200, 1)
       ]
     },
     {
       name: 'SPLIT SECOND',
       hint: 'Read the color. Jump and Pulse in the same breath.',
-      length: 4550,
+      length: 5232,
       speed: 320,
       gravityFlip: false,
       obstacles: [
-        O(620, 'spike', 0, 82, 34), O(905, 'wall', 1, 64, 150), C(1120, 1),
-        O(1370, 'spike', 1, 72, 34), O(1505, 'wall', 0, 62, 125), C(1770, 0),
-        O(2020, 'wall', 1, 60, 168), O(2260, 'spike', 0, 96, 34),
-        O(2540, 'wall', 0, 64, 128), O(2795, 'wall', 1, 64, 128), C(3050, 1),
-        O(3310, 'spike', 1, 96, 34), O(3610, 'wall', 0, 68, 178), O(3950, 'spike', 0, 84, 34), C(4260, 0)
+        O(694, 'spike', 0, 82, 34), O(1014, 'wall', 1, 64, 150), C(1254, 1),
+        O(1534, 'spike', 1, 72, 34), O(1686, 'wall', 0, 62, 125), C(1982, 0),
+        O(2262, 'wall', 1, 60, 168), O(2531, 'spike', 0, 96, 34),
+        O(2845, 'wall', 0, 64, 128), O(3130, 'wall', 1, 64, 128), C(3416, 1),
+        O(3707, 'spike', 1, 96, 34), O(4043, 'wall', 0, 68, 178), O(4424, 'spike', 0, 84, 34), C(4771, 0)
       ]
     },
     {
       name: 'CHAIN REACTION',
       hint: 'Pulse late. Perfect timing fills Overdrive.',
-      length: 5200,
+      length: 5980,
       speed: 342,
       gravityFlip: false,
       obstacles: [
-        O(610, 'wall', 0, 58, 130), O(875, 'wall', 1, 58, 130), O(1140, 'wall', 0, 58, 130), O(1405, 'wall', 1, 58, 130),
-        C(1625, 1), O(1880, 'spike', 0, 92, 34), O(2145, 'wall', 1, 62, 155), O(2390, 'spike', 1, 74, 34),
-        C(2625, 0), O(2870, 'wall', 0, 64, 132), O(3115, 'wall', 1, 64, 132), O(3370, 'wall', 0, 64, 132),
-        C(3600, 1), O(3840, 'spike', 1, 100, 34), O(4130, 'wall', 0, 70, 168), O(4420, 'spike', 0, 82, 34),
-        O(4680, 'wall', 1, 62, 146), C(4930, 1)
+        O(683, 'wall', 0, 58, 130), O(980, 'wall', 1, 58, 130), O(1277, 'wall', 0, 58, 130), O(1574, 'wall', 1, 58, 130),
+        C(1820, 1), O(2106, 'spike', 0, 92, 34), O(2402, 'wall', 1, 62, 155), O(2677, 'spike', 1, 74, 34),
+        C(2940, 0), O(3214, 'wall', 0, 64, 132), O(3489, 'wall', 1, 64, 132), O(3774, 'wall', 0, 64, 132),
+        C(4032, 1), O(4301, 'spike', 1, 100, 34), O(4626, 'wall', 0, 70, 168), O(4950, 'spike', 0, 82, 34),
+        O(5242, 'wall', 1, 62, 146), C(5522, 1)
       ]
     },
     {
       name: 'INVERTED',
       hint: 'Every Pulse flips gravity. Commit to the switch.',
-      length: 4550,
+      length: 5232,
       speed: 326,
       gravityFlip: true,
       obstacles: [
-        O(700, 'wall', 0, 60, 128, 'floor'), O(1080, 'wall', 1, 60, 128, 'ceiling'), C(1330, 1, 'ceiling'),
-        O(1600, 'wall', 0, 64, 148, 'ceiling'), O(1940, 'wall', 1, 64, 148, 'floor'), C(2190, 0, 'floor'),
-        O(2470, 'spike', 0, 90, 34, 'ceiling'), O(2780, 'spike', 1, 90, 34, 'floor'),
-        O(3120, 'wall', 0, 64, 165, 'floor'), C(3400, 1, 'ceiling'), O(3730, 'wall', 1, 64, 160, 'ceiling'),
-        O(4030, 'spike', 0, 92, 34, 'floor'), C(4330, 0, 'floor')
+        O(784, 'wall', 0, 60, 128, 'floor'), O(1210, 'wall', 1, 60, 128, 'ceiling'), C(1490, 1, 'ceiling'),
+        O(1792, 'wall', 0, 64, 148, 'ceiling'), O(2173, 'wall', 1, 64, 148, 'floor'), C(2453, 0, 'floor'),
+        O(2766, 'spike', 0, 90, 34, 'ceiling'), O(3114, 'spike', 1, 90, 34, 'floor'),
+        O(3494, 'wall', 0, 64, 165, 'floor'), C(3808, 1, 'ceiling'), O(4178, 'wall', 1, 64, 160, 'ceiling'),
+        O(4514, 'spike', 0, 92, 34, 'floor'), C(4850, 0, 'floor')
       ]
     },
     {
       name: 'THE HUNTER',
       hint: 'The Hunter is on you. Steal five cores and survive the collapse.',
-      length: 6000,
+      length: 6900,
       speed: 380,
       gravityFlip: false,
       voidChase: true,
       boss: true,
       bossRequired: 5,
       obstacles: [
-        O(590, 'spike', 0, 86, 34), O(875, 'wall', 1, 62, 138), B(1140, 0),
-        O(1410, 'wall', 0, 64, 152), O(1680, 'spike', 1, 100, 34), B(1940, 1),
-        O(2210, 'wall', 1, 66, 168), O(2480, 'spike', 0, 106, 34), B(2750, 0),
-        O(3030, 'wall', 0, 68, 110), O(3310, 'wall', 1, 68, 160), B(3575, 1),
-        O(3860, 'spike', 0, 112, 34), O(4170, 'wall', 1, 72, 175), B(4460, 0),
-        O(4750, 'spike', 1, 104, 34), O(5040, 'wall', 0, 70, 138), O(5330, 'spike', 0, 96, 34), O(5610, 'wall', 1, 70, 170)
+        O(661, 'spike', 0, 86, 34), O(980, 'wall', 1, 62, 138), B(1277, 0),
+        O(1579, 'wall', 0, 64, 152), O(1882, 'spike', 1, 100, 34), B(2173, 1),
+        O(2475, 'wall', 1, 66, 168), O(2778, 'spike', 0, 106, 34), B(3080, 0),
+        O(3394, 'wall', 0, 68, 110), O(3707, 'wall', 1, 68, 160), B(4004, 1),
+        O(4323, 'spike', 0, 112, 34), O(4670, 'wall', 1, 72, 175), B(4995, 0),
+        O(5320, 'spike', 1, 104, 34), O(5645, 'wall', 0, 70, 138), O(5970, 'spike', 0, 96, 34), O(6283, 'wall', 1, 70, 170)
       ]
     },
     {
       name: 'PRISM TRAFFIC',
       hint: 'Moving drones have their own rhythm. A shield buys one mistake.',
-      length: 5400,
+      length: 6210,
       speed: 345,
       gravityFlip: false,
       drones: true,
       obstacles: [
-        S(620), D(980, 0, 300, 105, 2.0, 0.1), C(1200, 0), O(1450, 'spike', 1, 86, 34),
-        D(1760, 1, 270, 120, 2.25, 1.4), O(2040, 'wall', 0, 62, 150), C(2270, 1),
-        D(2530, 0, 310, 95, 2.55, 2.0), O(2790, 'spike', 0, 96, 34), S(3050),
-        O(3290, 'wall', 1, 66, 160), D(3560, 1, 255, 125, 2.15, 3.1), C(3810, 0),
-        O(4070, 'spike', 1, 104, 34), D(4380, 0, 295, 110, 2.75, 0.8), O(4680, 'wall', 0, 68, 170),
-        C(4970, 1), O(5190, 'spike', 1, 90, 34)
+        S(694), D(1098, 0, 300, 105, 2.0, 0.1), C(1344, 0), O(1624, 'spike', 1, 86, 34),
+        D(1971, 1, 270, 120, 2.25, 1.4), O(2285, 'wall', 0, 62, 150), C(2542, 1),
+        D(2834, 0, 310, 95, 2.55, 2.0), O(3125, 'spike', 0, 96, 34), S(3416),
+        O(3685, 'wall', 1, 66, 160), D(3987, 1, 255, 125, 2.15, 3.1), C(4267, 0),
+        O(4558, 'spike', 1, 104, 34), D(4906, 0, 295, 110, 2.75, 0.8), O(5242, 'wall', 0, 68, 170),
+        C(5566, 1), O(5813, 'spike', 1, 90, 34)
       ]
     },
     {
       name: 'BLACKOUT',
       hint: 'Pulse is now your radar. Switch reality to light the road.',
-      length: 5600,
+      length: 6440,
       speed: 352,
       gravityFlip: false,
       blackout: true,
       drones: true,
       obstacles: [
-        C(620, 0), O(890, 'spike', 0, 82, 34), O(1180, 'wall', 1, 64, 158),
-        D(1480, 0, 285, 105, 2.2, 0.4), C(1720, 1), O(1990, 'spike', 1, 96, 34),
-        O(2290, 'wall', 0, 66, 175), S(2530), D(2810, 1, 260, 120, 2.6, 1.7),
-        O(3100, 'spike', 0, 102, 34), C(3370, 0), O(3650, 'wall', 1, 68, 170),
-        D(3940, 0, 305, 95, 2.9, 2.6), O(4230, 'spike', 1, 110, 34), C(4490, 1),
-        O(4770, 'wall', 0, 70, 185), D(5070, 1, 275, 115, 2.45, 0.2), C(5360, 0)
+        C(694, 0), O(997, 'spike', 0, 82, 34), O(1322, 'wall', 1, 64, 158),
+        D(1658, 0, 285, 105, 2.2, 0.4), C(1926, 1), O(2229, 'spike', 1, 96, 34),
+        O(2565, 'wall', 0, 66, 175), S(2834), D(3147, 1, 260, 120, 2.6, 1.7),
+        O(3472, 'spike', 0, 102, 34), C(3774, 0), O(4088, 'wall', 1, 68, 170),
+        D(4413, 0, 305, 95, 2.9, 2.6), O(4738, 'spike', 1, 110, 34), C(5029, 1),
+        O(5342, 'wall', 0, 70, 185), D(5678, 1, 275, 115, 2.45, 0.2), C(6003, 0)
       ]
     },
     {
       name: 'SINGULARITY',
       hint: 'Hunter Prime. Six cores. No clean exit unless you break it.',
-      length: 6900,
+      length: 7935,
       speed: 400,
       gravityFlip: false,
       voidChase: true,
@@ -249,14 +251,14 @@
       bossRequired: 6,
       drones: true,
       obstacles: [
-        O(580, 'spike', 0, 88, 34), D(850, 1, 280, 105, 2.4, 0.2), B(1110, 0),
-        O(1390, 'wall', 1, 66, 160), O(1670, 'spike', 0, 102, 34), B(1930, 1),
-        D(2190, 0, 300, 120, 2.65, 1.0), O(2470, 'wall', 0, 70, 180), B(2760, 0),
-        O(3040, 'spike', 1, 110, 34), D(3310, 1, 255, 120, 2.8, 2.0), B(3590, 1),
-        S(3820), O(4070, 'wall', 0, 72, 175), O(4350, 'spike', 0, 108, 34), B(4620, 0),
-        D(4890, 1, 300, 110, 3.0, 0.5), O(5160, 'wall', 1, 72, 185), B(5450, 1),
-        O(5730, 'spike', 0, 114, 34), D(6020, 0, 270, 125, 2.9, 1.6),
-        O(6300, 'wall', 1, 74, 175), O(6600, 'spike', 1, 100, 34)
+        O(650, 'spike', 0, 88, 34), D(952, 1, 280, 105, 2.4, 0.2), B(1243, 0),
+        O(1557, 'wall', 1, 66, 160), O(1870, 'spike', 0, 102, 34), B(2162, 1),
+        D(2453, 0, 300, 120, 2.65, 1.0), O(2766, 'wall', 0, 70, 180), B(3091, 0),
+        O(3405, 'spike', 1, 110, 34), D(3707, 1, 255, 120, 2.8, 2.0), B(4021, 1),
+        S(4278), O(4558, 'wall', 0, 72, 175), O(4872, 'spike', 0, 108, 34), B(5174, 0),
+        D(5477, 1, 300, 110, 3.0, 0.5), O(5779, 'wall', 1, 72, 185), B(6104, 1),
+        O(6418, 'spike', 0, 114, 34), D(6742, 0, 270, 125, 2.9, 1.6),
+        O(7056, 'wall', 1, 74, 175), O(7392, 'spike', 1, 100, 34)
       ]
     }
   ];
