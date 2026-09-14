@@ -11,7 +11,7 @@
 <body>
   <main class="shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark"></span><strong>PROJECT PULSE</strong><small>ALPHA 0.3</small></div>
+      <div class="brand"><span class="brand-mark"></span><strong>PROJECT PULSE</strong><small>ALPHA 0.4</small></div>
       <div class="top-actions">
         <button id="muteBtn" type="button" aria-pressed="false">SOUND ON</button>
         <button id="pauseBtn" type="button" aria-pressed="false">PAUSE</button>
@@ -34,7 +34,7 @@
           <p class="intro-copy">Auto-run through a collapsing neon world. Jump. Switch reality. Chain perfect pulses. Break the Hunter.</p>
           <div class="legend"><div><kbd>SPACE</kbd><span>Jump</span></div><div><kbd>X</kbd><span>Pulse</span></div><div><kbd>P</kbd><span>Pause</span></div></div>
           <div class="menu-actions"><button class="primary" id="startCampaign" type="button">START CAMPAIGN</button><button class="secondary" id="startEndless" type="button">ENDLESS MODE</button></div>
-          <small class="tiny">Mobile: left side = jump • right side = pulse</small>
+          <small class="tiny">Mobile: left side = jump • right side = pulse • adaptive soundtrack starts when you play</small>
         </div>
       </div>
 
@@ -51,10 +51,11 @@
 
     <section class="below-game">
       <div><strong>CORE LOOP</strong><span>Run → read → pulse → survive → chain → overdrive.</span></div>
-      <div><strong>ALPHA 0.3</strong><span>8 stages, ranks, drones, shield, blackout radar, Hunter Prime.</span></div>
+      <div><strong>ALPHA 0.4</strong><span>Adaptive procedural soundtrack now reacts to stage, Overdrive and bosses.</span></div>
       <div><strong>REPLAY GOAL</strong><span>Clear the campaign, destroy the Hunter, then chase S-ranks.</span></div>
     </section>
   </main>
   <script src="game-v3.js"></script>
+  <script src="music.js"></script>
 </body>
 </html>
