@@ -7,7 +7,6 @@
   const scoreLabel = document.getElementById('scoreLabel');
   const menu = document.getElementById('menuScreen');
   const victory = document.getElementById('victoryScreen');
-  const resumeBtn = document.getElementById('resumeBtn');
   if (!gameCard) return;
 
   const TUTORIALS = {
@@ -137,14 +136,6 @@
       setTimeout(() => finishTutorial(stage), stage === 9 ? 340 : 260);
     }, interval);
   }
-
-  // The Continue buttons are created after music.js loads. A synthetic click on the
-  // existing Resume control runs music.js's user-gesture start handler without
-  // changing gameplay when the prototype runner is not paused/running.
-  document.addEventListener('click', event => {
-    const target = event.target instanceof Element ? event.target : null;
-    if (target?.closest('#continueCampaign,#continueActThree')) resumeBtn?.click();
-  }, true);
 
   document.addEventListener('click', event => {
     const target = event.target instanceof Element ? event.target : null;
