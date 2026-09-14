@@ -3,6 +3,17 @@
 
   const KEYS = ['pulseBest', 'pulseRanks'];
 
+  if (window.PulsePlatform?.inPlayables) {
+    document.documentElement.classList.add('youtube-playables');
+    const quit = document.getElementById('quitBtn');
+    if (quit) {
+      quit.hidden = true;
+      quit.style.display = 'none';
+      quit.setAttribute('aria-hidden', 'true');
+      quit.tabIndex = -1;
+    }
+  }
+
   for (const key of KEYS) {
     try {
       const persistent = localStorage.getItem(key);

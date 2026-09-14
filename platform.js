@@ -182,8 +182,8 @@
 
     window.ytgame.system.onPause(() => {
       systemPaused = true;
-      dispatch('pulse:system-pause');
       scheduleSave(true);
+      dispatch('pulse:system-pause');
     });
 
     window.ytgame.system.onResume(() => {

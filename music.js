@@ -24,6 +24,7 @@
   let step = 0;
   let started = false;
   let musicMuted = false;
+  let platformPaused = false;
 
   const PROGRESSION = [
     { root: 73.42, chord: [146.83, 174.61, 220.00, 293.66], lead: [293.66, 349.23, 440.00, 523.25] },
@@ -84,7 +85,8 @@
   }
 
   function isGameAudible() {
-    if (!started || musicMuted || document.hidden) return false;
+    if (!started || musicMuted || platformPaused) return false;
+    if (window.PulsePlatform?.inPlayables && !window.PulsePlatform.systemAudioEnabled) return false;
     if (pauseScreen?.classList.contains('active')) return false;
     if (menuScreen?.classList.contains('active')) return false;
     if (victoryScreen?.classList.contains('active')) return false;
@@ -113,15 +115,18 @@
     return { stage, boss, blackout, overdrive, intensity, bpm: Math.min(150, bpm) };
   }
 
+  function startScheduler() {
+    if (!ctx || timer || platformPaused) return;
+    nextStepTime = ctx.currentTime + .08;
+    timer = setInterval(schedule, 35);
+  }
+
   function start() {
     if (!init()) return;
     started = true;
-    if (ctx.state === 'suspended') ctx.resume();
-    if (!timer) {
-      nextStepTime = ctx.currentTime + .08;
-      step = 0;
-      timer = setInterval(schedule, 35);
-    }
+    step = 0;
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    startScheduler();
     updateMaster(true);
   }
 
@@ -406,5 +411,24 @@
 
   document.getElementById('pauseBtn')?.addEventListener('click', () => setTimeout(() => updateMaster(), 0));
   document.getElementById('quitBtn')?.addEventListener('click', () => setTimeout(() => updateMaster(), 0));
-  document.addEventListener('visibilitychange', () => updateMaster());
+  window.addEventListener('pulse:system-pause', () => {
+    platformPaused = true;
+    if (timer) { clearInterval(timer); timer = null; }
+    updateMaster(true);
+    if (ctx?.state === 'running') ctx.suspend().catch(() => {});
+  });
+  window.addEventListener('pulse:system-resume', () => {
+    platformPaused = false;
+    const resume = ctx && started && !musicMuted && (!window.PulsePlatform?.inPlayables || window.PulsePlatform.systemAudioEnabled) && ctx.state === 'suspended'
+      ? ctx.resume().catch(() => {})
+      : Promise.resolve();
+    Promise.resolve(resume).finally(() => { startScheduler(); updateMaster(true); });
+  });
+  window.addEventListener('pulse:system-audio', event => {
+    const enabled = Boolean(event.detail?.enabled);
+    if (!enabled) { updateMaster(true); if (ctx?.state === 'running') ctx.suspend().catch(() => {}); }
+    else if (!platformPaused && started && !musicMuted && ctx?.state === 'suspended') {
+      ctx.resume().catch(() => {}).finally(() => { startScheduler(); updateMaster(true); });
+    }
+  });
 })();

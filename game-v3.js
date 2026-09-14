@@ -110,6 +110,9 @@
   let audioCtx = null;
   let muted = false;
   let bannerTimeout = 0;
+  let frameId = 0;
+  let platformPaused = false;
+  let pausedByPlatform = false;
 
   function safeParse(raw, fallback) {
     try { return raw ? JSON.parse(raw) : fallback; }
@@ -1306,11 +1309,31 @@
   }
 
   function frame(now) {
+    if (platformPaused) { frameId = 0; return; }
     const dt = Math.min(.033, (now - lastTime) / 1000 || 0);
     lastTime = now;
     update(dt);
     draw();
-    requestAnimationFrame(frame);
+    frameId = requestAnimationFrame(frame);
+  }
+
+  function handlePlatformPause() {
+    platformPaused = true;
+    pausedByPlatform = state.running && !state.paused;
+    if (pausedByPlatform) togglePause(true);
+    if (frameId) { cancelAnimationFrame(frameId); frameId = 0; }
+    if (audioCtx?.state === 'running') audioCtx.suspend().catch(() => {});
+  }
+
+  function handlePlatformResume() {
+    platformPaused = false;
+    if (pausedByPlatform) togglePause(false);
+    pausedByPlatform = false;
+    lastTime = performance.now();
+    if (audioCtx && !muted && (!window.PulsePlatform?.inPlayables || window.PulsePlatform.systemAudioEnabled) && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+    if (!frameId) frameId = requestAnimationFrame(frame);
   }
 
   function initAudio() {
@@ -1337,7 +1360,7 @@
   }
 
   function sound(kind) {
-    if (muted) return;
+    if (muted || platformPaused || (window.PulsePlatform?.inPlayables && !window.PulsePlatform.systemAudioEnabled)) return;
     initAudio();
     if (!audioCtx) return;
     if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -1390,13 +1413,17 @@
     ui.mute.setAttribute('aria-pressed', String(muted));
   });
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && state.running && !state.paused) togglePause(true);
+  window.addEventListener('pulse:system-pause', handlePlatformPause);
+  window.addEventListener('pulse:system-resume', handlePlatformResume);
+  window.addEventListener('pulse:system-audio', event => {
+    const enabled = Boolean(event.detail?.enabled);
+    if (!enabled && audioCtx?.state === 'running') audioCtx.suspend().catch(() => {});
+    else if (enabled && !platformPaused && !muted && audioCtx?.state === 'suspended') audioCtx.resume().catch(() => {});
   });
 
   canvas.width = W;
   canvas.height = H;
   syncHud();
   draw();
-  requestAnimationFrame(frame);
+  frameId = requestAnimationFrame(frame);
 })();
