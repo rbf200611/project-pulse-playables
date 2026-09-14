@@ -11,7 +11,7 @@
 <body>
   <main class="shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark"></span><strong>PROJECT PULSE</strong><small>VERTICAL SLICE 0.2</small></div>
+      <div class="brand"><span class="brand-mark"></span><strong>PROJECT PULSE</strong><small>ALPHA 0.3</small></div>
       <div class="top-actions">
         <button id="muteBtn" type="button" aria-pressed="false">SOUND ON</button>
         <button id="pauseBtn" type="button" aria-pressed="false">PAUSE</button>
@@ -22,7 +22,7 @@
       <canvas id="game" width="960" height="540" aria-label="Project Pulse game canvas"></canvas>
 
       <div class="hud" aria-hidden="true">
-        <div class="hud-left"><span id="stageLabel">STAGE 01</span><strong id="stageName">FIRST CONTACT</strong></div>
+        <div class="hud-left"><span id="stageLabel">STAGE 01 / 08</span><strong id="stageName">FIRST CONTACT</strong></div>
         <div class="hud-center"><span>OVERDRIVE</span><div class="meter"><i id="overdriveFill"></i></div><small id="comboLabel">COMBO x0</small></div>
         <div class="hud-right"><span>SCORE</span><strong id="scoreLabel">000000</strong></div>
       </div>
@@ -31,7 +31,7 @@
         <div class="screen-card intro-card">
           <p class="eyebrow">TWO REALITIES. ONE SECOND TO CHOOSE.</p>
           <h1>PROJECT<br><span>PULSE</span></h1>
-          <p class="intro-copy">Auto-run through a collapsing neon world. Jump. Switch reality. Chain perfect pulses. Do not stop.</p>
+          <p class="intro-copy">Auto-run through a collapsing neon world. Jump. Switch reality. Chain perfect pulses. Break the Hunter.</p>
           <div class="legend"><div><kbd>SPACE</kbd><span>Jump</span></div><div><kbd>X</kbd><span>Pulse</span></div><div><kbd>P</kbd><span>Pause</span></div></div>
           <div class="menu-actions"><button class="primary" id="startCampaign" type="button">START CAMPAIGN</button><button class="secondary" id="startEndless" type="button">ENDLESS MODE</button></div>
           <small class="tiny">Mobile: left side = jump • right side = pulse</small>
@@ -40,9 +40,9 @@
 
       <div class="screen" id="pauseScreen"><div class="screen-card compact-card"><p class="eyebrow">SYSTEM HOLD</p><h2>PAUSED</h2><button class="primary" id="resumeBtn" type="button">RESUME</button><button class="secondary" id="quitBtn" type="button">QUIT TO MENU</button></div></div>
 
-      <div class="screen" id="victoryScreen"><div class="screen-card intro-card"><p class="eyebrow">VERTICAL SLICE COMPLETE</p><h2>YOU BROKE<br>THE SYSTEM.</h2><p id="victoryStats">Five stages cleared.</p><div class="menu-actions"><button class="primary" id="replayBtn" type="button">RUN IT AGAIN</button><button class="secondary" id="victoryEndlessBtn" type="button">ENTER ENDLESS</button></div></div></div>
+      <div class="screen" id="victoryScreen"><div class="screen-card intro-card"><p class="eyebrow" id="victoryEyebrow">CAMPAIGN BREACH COMPLETE</p><h2 id="victoryTitle">HUNTER PRIME<br>DESTROYED.</h2><p id="victoryStats">Eight stages cleared.</p><div class="menu-actions"><button class="primary" id="replayBtn" type="button">RUN IT AGAIN</button><button class="secondary" id="victoryEndlessBtn" type="button">ENTER ENDLESS</button></div></div></div>
 
-      <div class="stage-banner" id="stageBanner" aria-live="polite"><small id="bannerStage">STAGE 01</small><strong id="bannerName">FIRST CONTACT</strong><span id="bannerHint">Jump the spikes. Pulse through the wall.</span></div>
+      <div class="stage-banner" id="stageBanner" aria-live="polite"><small id="bannerStage">STAGE 01 / 08</small><strong id="bannerName">FIRST CONTACT</strong><span id="bannerHint">Jump the spikes. Pulse through the wall.</span></div>
       <div class="death-flash" id="deathFlash"><strong>SHATTERED</strong><span>reconstructing…</span></div>
       <div class="pulse-flash" id="pulseFlash"></div>
 
@@ -51,10 +51,10 @@
 
     <section class="below-game">
       <div><strong>CORE LOOP</strong><span>Run → read → pulse → survive → chain → overdrive.</span></div>
-      <div><strong>V2 FEEL PASS</strong><span>Perfect-pulse slow-mo, near misses, stronger feedback, boss chase.</span></div>
-      <div><strong>STATUS</strong><span>GitHub prototype now. YouTube Playables adapter later.</span></div>
+      <div><strong>ALPHA 0.3</strong><span>8 stages, ranks, drones, shield, blackout radar, Hunter Prime.</span></div>
+      <div><strong>REPLAY GOAL</strong><span>Clear the campaign, destroy the Hunter, then chase S-ranks.</span></div>
     </section>
   </main>
-  <script src="game-v2.js"></script>
+  <script src="game-v3.js"></script>
 </body>
 </html>
