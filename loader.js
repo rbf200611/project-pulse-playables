@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const scripts = ['bootstrap.js', 'game-v3.js', 'music.js', 'polish.js', 'final-act.js', 'progression-final.js'];
+  const scripts = ['bootstrap.js', 'game-v3.js', 'music.js', 'polish.js', 'final-act.js', 'progression-final.js', 'rift-tutorial.js'];
 
   function loadScript(src) {
     return new Promise((resolve, reject) => {
