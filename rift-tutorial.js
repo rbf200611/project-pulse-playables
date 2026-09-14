@@ -9,9 +9,41 @@
   const victory = document.getElementById('victoryScreen');
   if (!gameCard) return;
 
+  const TUTORIALS = {
+    9: {
+      kicker: 'ORANGE RIFT',
+      title: 'PINPOINT <span>PULSE</span>',
+      rule: 'Not too early. Not too late.',
+      hint: 'ORANGE RIFT — pulse as it reaches you.',
+      count: 3,
+      prestart: true
+    },
+    11: {
+      kicker: 'ECHO DRONE',
+      title: 'READ THE <span>GLOW</span>',
+      rule: 'It switches realities.',
+      hint: 'ECHO DRONE — read the glow before you commit.',
+      count: 2
+    },
+    14: {
+      kicker: 'BLACKOUT',
+      title: '<span>PULSE</span> TO SEE',
+      rule: 'Your Pulse is the radar.',
+      hint: 'BLACKOUT — pulse to reveal the road.',
+      count: 2
+    },
+    16: {
+      kicker: 'HUNTER PRIME',
+      title: 'EIGHT <span>CORES</span>',
+      rule: 'Hit every core. Survive.',
+      hint: 'HUNTER PRIME — eight cores. One clean exit.',
+      count: 2
+    }
+  };
+
   const style = document.createElement('style');
   style.textContent = `
-    .rift-preflight{position:absolute;inset:0;z-index:80;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 48%,rgba(255,143,72,.16),rgba(3,5,11,.94) 58%);opacity:0;pointer-events:none;transition:opacity .18s ease}.rift-preflight.show{opacity:1;pointer-events:auto}.rift-preflight-card{width:min(520px,92%);padding:24px 22px 22px;border:1px solid rgba(255,155,84,.55);border-radius:22px;background:rgba(8,9,18,.94);box-shadow:0 0 44px rgba(255,126,61,.22),inset 0 0 30px rgba(255,155,84,.05);text-align:center}.rift-preflight .rift-kicker{display:block;margin-bottom:7px;color:#ff9b54;font-size:.68rem;font-weight:950;letter-spacing:.2em}.rift-preflight h3{margin:0;color:#fff;font-size:clamp(1.8rem,5vw,3.1rem);line-height:.94;letter-spacing:.03em}.rift-preflight h3 span{color:#ffd25d}.rift-preflight .rift-rule{margin:14px 0 0;color:#fff;font-size:clamp(.92rem,2.4vw,1.15rem);font-weight:900;letter-spacing:.02em}.rift-preflight .rift-count{margin-top:18px;color:#ff9b54;font-size:.72rem;font-weight:950;letter-spacing:.16em}.rift-preflight .rift-count b{display:inline-block;min-width:1.2em;color:#fff;font-size:1.05rem}.reduced-effects .rift-preflight{transition:none}.reduced-effects .rift-preflight-card{box-shadow:none}@media(max-width:640px){.rift-preflight-card{padding:20px 16px 18px}}
+    .rift-preflight{position:absolute;inset:0;z-index:80;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 48%,rgba(255,143,72,.16),rgba(3,5,11,.94) 58%);opacity:0;pointer-events:none;transition:opacity .16s ease}.rift-preflight.show{opacity:1;pointer-events:auto}.rift-preflight-card{width:min(500px,92%);padding:22px 20px 20px;border:1px solid rgba(255,155,84,.55);border-radius:22px;background:rgba(8,9,18,.95);box-shadow:0 0 42px rgba(255,126,61,.2),inset 0 0 28px rgba(255,155,84,.05);text-align:center}.rift-preflight .rift-kicker{display:block;margin-bottom:7px;color:#ff9b54;font-size:.68rem;font-weight:950;letter-spacing:.2em}.rift-preflight h3{margin:0;color:#fff;font-size:clamp(1.8rem,5vw,3rem);line-height:.94;letter-spacing:.03em}.rift-preflight h3 span{color:#ffd25d}.rift-preflight .rift-rule{margin:13px 0 0;color:#fff;font-size:clamp(.92rem,2.4vw,1.12rem);font-weight:900;letter-spacing:.02em}.rift-preflight .rift-count{margin-top:17px;color:#ff9b54;font-size:.7rem;font-weight:950;letter-spacing:.16em}.rift-preflight .rift-count b{display:inline-block;min-width:1.2em;color:#fff;font-size:1.04rem}.reduced-effects .rift-preflight{transition:none}.reduced-effects .rift-preflight-card{box-shadow:none}@media(max-width:640px){.rift-preflight-card{padding:19px 15px 17px}}
   `;
   document.head.appendChild(style);
 
@@ -19,19 +51,29 @@
   overlay.className = 'rift-preflight';
   overlay.setAttribute('role', 'dialog');
   overlay.setAttribute('aria-live', 'assertive');
-  overlay.setAttribute('aria-label', 'Stage 9 orange Rift tutorial');
+  overlay.setAttribute('aria-label', 'Project Pulse mechanic introduction');
   overlay.innerHTML = `
     <div class="rift-preflight-card">
-      <span class="rift-kicker">ORANGE RIFT</span>
-      <h3>PINPOINT <span>PULSE</span></h3>
-      <p class="rift-rule">Not too early. Not too late.</p>
+      <span class="rift-kicker"></span>
+      <h3></h3>
+      <p class="rift-rule"></p>
       <div class="rift-count">RUN STARTS IN <b>3</b></div>
     </div>`;
   gameCard.appendChild(overlay);
 
+  const kickerNode = overlay.querySelector('.rift-kicker');
+  const titleNode = overlay.querySelector('h3');
+  const ruleNode = overlay.querySelector('.rift-rule');
+  const countWrap = overlay.querySelector('.rift-count');
   const countNode = overlay.querySelector('.rift-count b');
-  let preflightActive = false;
+
+  let activeStage = 0;
   let countdownTimer = null;
+  const seen = new Set();
+
+  function stageNumber() {
+    return Number((stageLabel?.textContent || '').match(/STAGE\s+(\d+)/i)?.[1] || 0);
+  }
 
   function savedUnlocked() {
     try {
@@ -40,21 +82,48 @@
     } catch (_) { return 1; }
   }
 
-  function beginStageNine() {
-    preflightActive = false;
-    clearInterval(countdownTimer);
-    overlay.classList.remove('show');
-    victory?.classList.remove('active');
-    menu?.classList.remove('active');
-    window.PulseFinal?.start(9, Number(scoreLabel?.textContent || 0));
+  function reinforceHint(stage = stageNumber()) {
+    const tutorial = TUTORIALS[stage];
+    if (tutorial && bannerHint) bannerHint.textContent = tutorial.hint;
   }
 
-  function showPreflight() {
-    if (preflightActive) return;
-    preflightActive = true;
-    let count = 3;
+  function finishTutorial(stage) {
+    clearInterval(countdownTimer);
+    countdownTimer = null;
+    overlay.classList.remove('show');
+    activeStage = 0;
+
+    const tutorial = TUTORIALS[stage];
+    if (tutorial?.prestart) {
+      victory?.classList.remove('active');
+      menu?.classList.remove('active');
+      window.PulseFinal?.start(stage, Number(scoreLabel?.textContent || 0));
+      return;
+    }
+    window.PulseFinal?.resume?.();
+    reinforceHint(stage);
+  }
+
+  function showTutorial(stage) {
+    const tutorial = TUTORIALS[stage];
+    if (!tutorial || seen.has(stage) || activeStage) return;
+
+    seen.add(stage);
+    activeStage = stage;
+    clearInterval(countdownTimer);
+
+    if (!tutorial.prestart && window.PulseFinal?.active) window.PulseFinal.pause?.();
+
+    kickerNode.textContent = tutorial.kicker;
+    titleNode.innerHTML = tutorial.title;
+    ruleNode.textContent = tutorial.rule;
+    countWrap.firstChild.textContent = 'RUN STARTS IN ';
+
+    let count = tutorial.count;
     countNode.textContent = String(count);
     overlay.classList.add('show');
+
+    const interval = stage === 9 ? 850 : 650;
     countdownTimer = setInterval(() => {
       count -= 1;
       if (count > 0) {
@@ -62,9 +131,10 @@
         return;
       }
       clearInterval(countdownTimer);
+      countdownTimer = null;
       countNode.textContent = 'GO';
-      setTimeout(beginStageNine, 360);
-    }, 850);
+      setTimeout(() => finishTutorial(stage), stage === 9 ? 340 : 260);
+    }, interval);
   }
 
   document.addEventListener('click', event => {
@@ -74,7 +144,7 @@
     if (target.closest('#continueActThree')) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      showPreflight();
+      showTutorial(9);
       return;
     }
 
@@ -83,18 +153,22 @@
       if (unlocked !== 9) return;
       event.preventDefault();
       event.stopImmediatePropagation();
-      showPreflight();
+      showTutorial(9);
     }
   }, true);
 
-  function reinforceHint() {
-    const m = (stageLabel?.textContent || '').match(/STAGE\s+(\d+)/i);
-    if (Number(m?.[1] || 0) === 9 && bannerHint) {
-      bannerHint.textContent = 'ORANGE RIFT — pulse as it reaches you.';
-    }
+  let lastObservedStage = stageNumber();
+  function detectStage() {
+    const stage = stageNumber();
+    if (!stage) return;
+    reinforceHint(stage);
+    if (stage === lastObservedStage) return;
+    lastObservedStage = stage;
+    if (stage !== 9 && TUTORIALS[stage]) setTimeout(() => showTutorial(stage), 60);
   }
 
-  const observer = new MutationObserver(() => setTimeout(reinforceHint, 0));
+  const observer = new MutationObserver(detectStage);
   if (stageLabel) observer.observe(stageLabel, { childList:true, characterData:true, subtree:true });
   if (bannerHint) observer.observe(bannerHint, { childList:true, characterData:true, subtree:true });
+  reinforceHint();
 })();
