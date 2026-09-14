@@ -66,10 +66,19 @@
     return Object.values(save().ranks || {}).filter(v => v === 'S').length;
   }
 
+  // Keep the primary play controls high in the card so they never get pushed below the fold.
+  const menuActions = introCard?.querySelector('.menu-actions');
+  const legend = introCard?.querySelector('.legend');
+  if (introCard && menuActions && legend) introCard.insertBefore(menuActions, legend);
+
   const progress = document.createElement('div');
   progress.className = 'campaign-progress';
   progress.innerHTML = '<span>CAMPAIGN</span><strong>1 / 16</strong><i></i><small>0 S-RANKS</small>';
-  introCard?.insertBefore(progress, introCard.querySelector('.menu-actions'));
+  if (introCard) {
+    const tiny = introCard.querySelector('.tiny');
+    if (tiny) introCard.insertBefore(progress, tiny);
+    else introCard.appendChild(progress);
+  }
 
   const continueBtn = document.createElement('button');
   continueBtn.className = 'primary continue-final';
