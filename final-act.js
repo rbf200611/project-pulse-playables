@@ -180,6 +180,7 @@
   let feedback = [];
   let last = performance.now();
   let bannerTimer = 0;
+  let actOverlayTimer = 0;
   let audioCtx = null;
   let fxMuted = false;
   let frameId = 0;
@@ -294,7 +295,8 @@
     overlay.querySelector('strong').textContent=parts[1] || '';
     overlay.querySelector('span').textContent=state.stageAbs===9?'Reality has fractured. New rules now overlap.':'Everything you learned now stacks together.';
     overlay.classList.add('show');
-    setTimeout(()=>overlay.classList.remove('show'),1900);
+    clearTimeout(actOverlayTimer);
+    actOverlayTimer=setTimeout(()=>overlay.classList.remove('show'),1900);
   }
 
   function togglePause(force) {
@@ -510,7 +512,7 @@
   function sound(k){if(fxMuted||platformPaused||(window.PulsePlatform?.inPlayables&&!window.PulsePlatform.systemAudioEnabled))return;initAudio();if(!audioCtx)return;if(audioCtx.state==='suspended')audioCtx.resume();if(k==='jump')tone(330,.07,'square',.04,430);else if(k==='pulse'){tone(110,.1,'sine',.06,78);tone(660,.07,'triangle',.018,920,.015);}else if(k==='perfect'){tone(460,.09,'triangle',.06,760);tone(920,.11,'sine',.025,1200,.03);}else if(k==='clutch'){tone(180,.12,'sawtooth',.055,95);tone(620,.12,'triangle',.065,1120,.025);}else if(k==='near')tone(760,.07,'triangle',.035,980);else if(k==='core')tone(820,.11,'sine',.055,1180);else if(k==='bossHit'){tone(120,.18,'sawtooth',.09,62);tone(520,.16,'triangle',.055,1040,.02);}else if(k==='shield')tone(560,.12,'sine',.05,840);else if(k==='shieldBreak'){tone(220,.14,'square',.055,90);tone(900,.1,'triangle',.03,400,.02);}else if(k==='death')tone(75,.24,'sawtooth',.09,38);else if(k==='clear'){tone(620,.12,'triangle',.06,880);tone(880,.16,'triangle',.05,1220,.09);}else if(k==='overdrive'){tone(95,.3,'sawtooth',.09,58);tone(380,.24,'triangle',.045,760,.03);}}
 
   function frame(now){if(platformPaused){frameId=0;return;}const dt=Math.min(.033,(now-last)/1000||0);last=now;update(dt);draw();frameId=requestAnimationFrame(frame);}
-  function handlePlatformPause(){platformPaused=true;pausedByPlatform=state.active&&!state.paused;if(pausedByPlatform)togglePause(true);if(frameId){cancelAnimationFrame(frameId);frameId=0;}if(audioCtx?.state==='running')audioCtx.suspend().catch(()=>{});}
+  function handlePlatformPause(){platformPaused=true;pausedByPlatform=state.active&&!state.paused;if(pausedByPlatform)togglePause(true);clearTimeout(bannerTimer);clearTimeout(actOverlayTimer);bannerTimer=0;actOverlayTimer=0;ui.banner?.classList.remove('show');document.querySelector('.act-overlay')?.classList.remove('show');if(frameId){cancelAnimationFrame(frameId);frameId=0;}if(audioCtx?.state==='running')audioCtx.suspend().catch(()=>{});}
   function handlePlatformResume(){platformPaused=false;if(pausedByPlatform)togglePause(false);pausedByPlatform=false;last=performance.now();if(audioCtx&&!fxMuted&&(!window.PulsePlatform?.inPlayables||window.PulsePlatform.systemAudioEnabled)&&audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});if(!frameId)frameId=requestAnimationFrame(frame);}
 
   window.addEventListener('keydown',e=>{if(!state.active||state.paused)return;const k=e.key.toLowerCase();if([' ','x','p','arrowup','w'].includes(k))e.preventDefault();if(k===' '||k==='arrowup'||k==='w')jump();else if(k==='x'||k==='shift')pulse();else if(k==='p'||k==='escape')togglePause();},{passive:false});

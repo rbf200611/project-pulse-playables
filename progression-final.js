@@ -19,9 +19,6 @@
   const introCard = menu?.querySelector('.intro-card');
 
   let act2Handled = false;
-  let forcedMusic = false;
-  let forcedFx = false;
-  let applyingSystemAudio = false;
 
   function save() {
     try {
@@ -48,7 +45,6 @@
   }
 
   function persistAudioSettings() {
-    if (applyingSystemAudio) return;
     const next = {
       music: musicBtn?.getAttribute('aria-pressed') !== 'true',
       fx: fxBtn?.getAttribute('aria-pressed') !== 'true'
@@ -162,17 +158,7 @@
   });
 
   function applySystemAudio(enabled) {
-    if (!musicBtn || !fxBtn) return;
-    applyingSystemAudio = true;
-    if (!enabled) {
-      if (musicBtn.getAttribute('aria-pressed') !== 'true') { forcedMusic = true; musicBtn.click(); }
-      if (fxBtn.getAttribute('aria-pressed') !== 'true') { forcedFx = true; fxBtn.click(); }
-    } else {
-      if (forcedMusic && musicBtn.getAttribute('aria-pressed') === 'true') musicBtn.click();
-      if (forcedFx && fxBtn.getAttribute('aria-pressed') === 'true') fxBtn.click();
-      forcedMusic = false; forcedFx = false;
-    }
-    applyingSystemAudio = false;
+    document.documentElement.classList.toggle('pulse-system-muted', !enabled);
   }
 
   function restoreAudioSettings() {
@@ -181,8 +167,8 @@
     if (settings.fx === false && fxBtn?.getAttribute('aria-pressed') !== 'true') fxBtn.click();
   }
 
-  musicBtn?.addEventListener('click', () => setTimeout(persistAudioSettings, 0));
-  fxBtn?.addEventListener('click', () => setTimeout(persistAudioSettings, 0));
+  musicBtn?.addEventListener('click', persistAudioSettings);
+  fxBtn?.addEventListener('click', persistAudioSettings);
 
   window.addEventListener('pulse:system-audio', e => applySystemAudio(Boolean(e.detail?.enabled)));
   window.addEventListener('pulse:system-pause', () => {

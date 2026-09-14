@@ -12,6 +12,14 @@
       quit.setAttribute('aria-hidden', 'true');
       quit.tabIndex = -1;
     }
+
+    for (const type of ['pointerdown', 'pointerup', 'click', 'touchstart', 'touchend', 'keydown', 'keyup']) {
+      document.addEventListener(type, event => {
+        if (!window.PulsePlatform?.systemPaused) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }, { capture: true, passive: false });
+    }
   }
 
   for (const key of KEYS) {

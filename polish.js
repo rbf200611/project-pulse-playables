@@ -15,9 +15,11 @@
       if (ranks !== null) localStorage.setItem('pulseRanks', ranks);
     } catch (_) {}
   }
-  setInterval(mirrorProgress, 1000);
-  window.addEventListener('pagehide', mirrorProgress);
-  window.addEventListener('beforeunload', mirrorProgress);
+  if (!window.PulsePlatform?.inPlayables) {
+    setInterval(mirrorProgress, 1000);
+    window.addEventListener('pagehide', mirrorProgress);
+    window.addEventListener('beforeunload', mirrorProgress);
+  }
 
   const reduceBtn = document.createElement('button');
   reduceBtn.id = 'reduceFxBtn';
@@ -47,6 +49,7 @@
   ];
   let lastAct = '';
   let actTimer = null;
+  let platformPaused = false;
 
   function stageNumber() {
     const m = (stageLabel?.textContent || '').match(/STAGE\s+(\d+)/i);
@@ -54,6 +57,7 @@
   }
 
   function maybeShowAct() {
+    if (platformPaused) return;
     const n = stageNumber();
     if (!n) return;
     const act = acts.find(a => n >= a.min && n <= a.max);
@@ -78,6 +82,7 @@
 
   let guideTimer = null;
   startButtons.forEach(btn => btn.addEventListener('click', () => {
+    if (platformPaused) return;
     clearTimeout(guideTimer);
     const firstCampaign = btn.id === 'startCampaign' || btn.id === 'replayBtn';
     tutorial.classList.toggle('show', firstCampaign);
@@ -87,8 +92,18 @@
   document.getElementById('jumpBtn')?.addEventListener('pointerdown', () => tutorial.classList.remove('show'));
   document.getElementById('pulseBtn')?.addEventListener('pointerdown', () => tutorial.classList.remove('show'));
   window.addEventListener('keydown', e => {
+    if (platformPaused) return;
     if ([' ', 'x', 'w', 'arrowup'].includes(e.key.toLowerCase())) tutorial.classList.remove('show');
   });
+
+  window.addEventListener('pulse:system-pause', () => {
+    platformPaused = true;
+    clearTimeout(actTimer); actTimer = null;
+    clearTimeout(guideTimer); guideTimer = null;
+    actOverlay.classList.remove('show');
+    tutorial.classList.remove('show');
+  });
+  window.addEventListener('pulse:system-resume', () => { platformPaused = false; });
 
   if ('matchMedia' in window) {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');

@@ -6,6 +6,11 @@
 
   const contexts = new Set();
 
+  function platformAllowsAudio() {
+    const platform = window.PulsePlatform;
+    return !platform?.inPlayables || (!platform.systemPaused && platform.systemAudioEnabled);
+  }
+
   function track(context) {
     if (context) contexts.add(context);
     return context;
@@ -39,7 +44,7 @@
   }
 
   function unlockContext(context) {
-    if (!context || context.state === 'closed') return;
+    if (!platformAllowsAudio() || !context || context.state === 'closed') return;
     try {
       if (context.state === 'suspended' || context.state === 'interrupted') {
         const resumed = context.resume();
@@ -58,17 +63,28 @@
     contexts.forEach(unlockContext);
   }
 
+  function suspendAll() {
+    contexts.forEach(context => {
+      if (context?.state === 'running') {
+        try { context.suspend().catch(() => {}); } catch (_) {}
+      }
+    });
+  }
+
   function onUserGesture() {
+    if (!platformAllowsAudio()) return;
     // Resume contexts that already exist, then run again after the current
     // gesture finishes so contexts created by Start/Continue are included.
     unlockAll();
-    queueMicrotask(unlockAll);
+    queueMicrotask(() => { if (platformAllowsAudio()) unlockAll(); });
   }
 
   document.addEventListener('pointerdown', onUserGesture, true);
   document.addEventListener('touchend', onUserGesture, { capture: true, passive: true });
   document.addEventListener('click', onUserGesture, true);
   document.addEventListener('keydown', onUserGesture, true);
+  window.addEventListener('pulse:system-pause', suspendAll);
+  window.addEventListener('pulse:system-audio', event => { if (!event.detail?.enabled) suspendAll(); });
 
   window.PulseAudioUnlock = {
     track,

@@ -1321,6 +1321,9 @@
     platformPaused = true;
     pausedByPlatform = state.running && !state.paused;
     if (pausedByPlatform) togglePause(true);
+    clearTimeout(bannerTimeout);
+    bannerTimeout = 0;
+    ui.banner?.classList.remove('show');
     if (frameId) { cancelAnimationFrame(frameId); frameId = 0; }
     if (audioCtx?.state === 'running') audioCtx.suspend().catch(() => {});
   }

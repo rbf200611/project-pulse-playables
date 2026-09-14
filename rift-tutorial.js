@@ -69,6 +69,10 @@
 
   let activeStage = 0;
   let countdownTimer = null;
+  let finishTimer = null;
+  let platformPaused = false;
+  let currentCount = 0;
+  let currentInterval = 0;
   const seen = new Set();
 
   function stageNumber() {
@@ -90,7 +94,9 @@
 
   function finishTutorial(stage) {
     clearInterval(countdownTimer);
+    clearTimeout(finishTimer);
     countdownTimer = null;
+    finishTimer = null;
     overlay.classList.remove('show');
     activeStage = 0;
 
@@ -103,6 +109,30 @@
     }
     window.PulseFinal?.resume?.();
     reinforceHint(stage);
+  }
+
+  function startCountdown(stage) {
+    if (platformPaused || activeStage !== stage) return;
+    clearInterval(countdownTimer);
+    clearTimeout(finishTimer);
+    countdownTimer = null;
+    finishTimer = null;
+    if (currentCount <= 0) {
+      countNode.textContent = 'GO';
+      finishTimer = setTimeout(() => finishTutorial(stage), stage === 9 ? 340 : 260);
+      return;
+    }
+    countdownTimer = setInterval(() => {
+      currentCount -= 1;
+      if (currentCount > 0) {
+        countNode.textContent = String(currentCount);
+        return;
+      }
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+      countNode.textContent = 'GO';
+      finishTimer = setTimeout(() => finishTutorial(stage), stage === 9 ? 340 : 260);
+    }, currentInterval);
   }
 
   function showTutorial(stage) {
@@ -120,22 +150,11 @@
     ruleNode.textContent = tutorial.rule;
     countWrap.firstChild.textContent = 'RUN STARTS IN ';
 
-    let count = tutorial.count;
-    countNode.textContent = String(count);
+    currentCount = tutorial.count;
+    currentInterval = stage === 9 ? 850 : 650;
+    countNode.textContent = String(currentCount);
     overlay.classList.add('show');
-
-    const interval = stage === 9 ? 850 : 650;
-    countdownTimer = setInterval(() => {
-      count -= 1;
-      if (count > 0) {
-        countNode.textContent = String(count);
-        return;
-      }
-      clearInterval(countdownTimer);
-      countdownTimer = null;
-      countNode.textContent = 'GO';
-      setTimeout(() => finishTutorial(stage), stage === 9 ? 340 : 260);
-    }, interval);
+    startCountdown(stage);
   }
 
   document.addEventListener('click', event => {
@@ -164,10 +183,19 @@
     if (!stage || stage === lastObservedStage) return;
     lastObservedStage = stage;
     reinforceHint(stage);
-    if (stage !== 9 && TUTORIALS[stage]) setTimeout(() => showTutorial(stage), 60);
+    if (stage !== 9 && TUTORIALS[stage]) showTutorial(stage);
   }
 
   const observer = new MutationObserver(detectStage);
   if (stageLabel) observer.observe(stageLabel, { childList:true, characterData:true, subtree:true });
+  window.addEventListener('pulse:system-pause', () => {
+    platformPaused = true;
+    clearInterval(countdownTimer); countdownTimer = null;
+    clearTimeout(finishTimer); finishTimer = null;
+  });
+  window.addEventListener('pulse:system-resume', () => {
+    platformPaused = false;
+    if (activeStage) startCountdown(activeStage);
+  });
   reinforceHint();
 })();

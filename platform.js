@@ -173,21 +173,25 @@
       systemAudioEnabled = true;
     }
     window.__PULSE_SYSTEM_AUDIO__ = systemAudioEnabled;
+    document.documentElement.classList.toggle('pulse-system-muted', !systemAudioEnabled);
 
     window.ytgame.system.onAudioEnabledChange(enabled => {
       systemAudioEnabled = Boolean(enabled);
       window.__PULSE_SYSTEM_AUDIO__ = systemAudioEnabled;
+      document.documentElement.classList.toggle('pulse-system-muted', !systemAudioEnabled);
       dispatch('pulse:system-audio', { enabled: systemAudioEnabled });
     });
 
     window.ytgame.system.onPause(() => {
       systemPaused = true;
+      document.documentElement.classList.add('pulse-system-paused');
       scheduleSave(true);
       dispatch('pulse:system-pause');
     });
 
     window.ytgame.system.onResume(() => {
       systemPaused = false;
+      document.documentElement.classList.remove('pulse-system-paused');
       dispatch('pulse:system-resume');
     });
   }
