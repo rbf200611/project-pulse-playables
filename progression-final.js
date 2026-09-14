@@ -11,6 +11,7 @@
   const musicBtn = document.getElementById('musicBtn');
   const fxBtn = document.getElementById('muteBtn');
   const pauseBtn = document.getElementById('pauseBtn');
+  const resumeBtn = document.getElementById('resumeBtn');
   const victoryTitle = document.getElementById('victoryTitle');
   const victoryEyebrow = document.getElementById('victoryEyebrow');
   const victoryStats = document.getElementById('victoryStats');
@@ -20,6 +21,7 @@
   let act2Handled = false;
   let forcedMusic = false;
   let forcedFx = false;
+  let applyingSystemAudio = false;
 
   function save() {
     try {
@@ -27,9 +29,10 @@
       return {
         ranks: JSON.parse(localStorage.getItem('pulseRanks') || '{}'),
         unlockedStage: Number(localStorage.getItem('pulseUnlockedStage') || 1),
-        bestScore: Number(localStorage.getItem('pulseBestScore') || 0)
+        bestScore: Number(localStorage.getItem('pulseBestScore') || 0),
+        settings: JSON.parse(localStorage.getItem('pulseSettings') || '{}')
       };
-    } catch (_) { return { ranks:{}, unlockedStage:1, bestScore:0 }; }
+    } catch (_) { return { ranks:{}, unlockedStage:1, bestScore:0, settings:{} }; }
   }
 
   function setUnlocked(value) {
@@ -42,6 +45,21 @@
       if (next > current) localStorage.setItem('pulseUnlockedStage', String(next));
     }
     updateMenuProgress();
+  }
+
+  function persistAudioSettings() {
+    if (applyingSystemAudio) return;
+    const next = {
+      music: musicBtn?.getAttribute('aria-pressed') !== 'true',
+      fx: fxBtn?.getAttribute('aria-pressed') !== 'true'
+    };
+    if (window.PulsePlatform) window.PulsePlatform.updateSettings(next, true);
+    else {
+      try {
+        const old = JSON.parse(localStorage.getItem('pulseSettings') || '{}');
+        localStorage.setItem('pulseSettings', JSON.stringify({...old,...next}));
+      } catch (_) {}
+    }
   }
 
   function rankCount() {
@@ -73,6 +91,7 @@
 
   continueBtn.addEventListener('click', () => {
     const unlocked = Math.max(9, Math.min(16, save().unlockedStage || 9));
+    resumeBtn?.click();
     window.PulseFinal?.start(unlocked, Number(scoreLabel?.textContent || 0));
   });
 
@@ -135,6 +154,7 @@
 
   function applySystemAudio(enabled) {
     if (!musicBtn || !fxBtn) return;
+    applyingSystemAudio = true;
     if (!enabled) {
       if (musicBtn.getAttribute('aria-pressed') !== 'true') { forcedMusic = true; musicBtn.click(); }
       if (fxBtn.getAttribute('aria-pressed') !== 'true') { forcedFx = true; fxBtn.click(); }
@@ -143,14 +163,24 @@
       if (forcedFx && fxBtn.getAttribute('aria-pressed') === 'true') fxBtn.click();
       forcedMusic = false; forcedFx = false;
     }
+    applyingSystemAudio = false;
   }
+
+  function restoreAudioSettings() {
+    const settings = save().settings || {};
+    if (settings.music === false && musicBtn?.getAttribute('aria-pressed') !== 'true') musicBtn.click();
+    if (settings.fx === false && fxBtn?.getAttribute('aria-pressed') !== 'true') fxBtn.click();
+  }
+
+  musicBtn?.addEventListener('click', () => setTimeout(persistAudioSettings, 0));
+  fxBtn?.addEventListener('click', () => setTimeout(persistAudioSettings, 0));
 
   window.addEventListener('pulse:system-audio', e => applySystemAudio(Boolean(e.detail?.enabled)));
   window.addEventListener('pulse:system-pause', () => {
     if (!window.PulseFinal?.active && pauseBtn?.textContent === 'PAUSE' && !menu?.classList.contains('active') && !victory?.classList.contains('active')) pauseBtn.click();
   });
   window.addEventListener('pulse:system-resume', () => {
-    if (!window.PulseFinal?.active && pauseBtn?.textContent === 'RESUME') document.getElementById('resumeBtn')?.click();
+    if (!window.PulseFinal?.active && pauseBtn?.textContent === 'RESUME') resumeBtn?.click();
   });
 
   window.addEventListener('pulse:campaign-complete', e => {
@@ -160,6 +190,7 @@
   });
 
   window.PulsePlatform?.ready?.then(() => {
+    restoreAudioSettings();
     updateMenuProgress();
     if (window.PulsePlatform.inPlayables) applySystemAudio(window.PulsePlatform.systemAudioEnabled);
   });
