@@ -22,7 +22,7 @@ jobs:
           node --check final-act.js
           node --check progression-final.js
           node --check rift-tutorial.js
-      - name: Required files
+      - name: Required release files
         run: |
           test -f index.html
           test -f styles.css
@@ -30,6 +30,13 @@ jobs:
           test -f final.css
           test -f rift-tutorial.js
           test -f RELEASE_CHECKLIST.md
+          grep -q 'https://www.youtube.com/game_api/v1' index.html
+          grep -q '<script src="platform.js"></script>' index.html
+          grep -q "'rift-tutorial.js'" loader.js
+      - name: No legacy runtime files
+        run: |
+          test ! -f game.js
+          test ! -f game-v2.js
       - name: Bundle budget
         run: |
           bytes=$(find . -type f -not -path './.git/*' -printf '%s\n' | awk '{s+=$1} END {print s+0}')
