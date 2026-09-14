@@ -11,7 +11,7 @@
 
   const style = document.createElement('style');
   style.textContent = `
-    .rift-preflight{position:absolute;inset:0;z-index:80;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 48%,rgba(255,143,72,.16),rgba(3,5,11,.94) 58%);opacity:0;pointer-events:none;transition:opacity .18s ease}.rift-preflight.show{opacity:1;pointer-events:auto}.rift-preflight-card{width:min(560px,92%);padding:26px 24px 24px;border:1px solid rgba(255,155,84,.55);border-radius:22px;background:rgba(8,9,18,.94);box-shadow:0 0 44px rgba(255,126,61,.22),inset 0 0 30px rgba(255,155,84,.05);text-align:center}.rift-preflight .rift-kicker{display:block;margin-bottom:7px;color:#ff9b54;font-size:.68rem;font-weight:950;letter-spacing:.2em}.rift-preflight h3{margin:0;color:#fff;font-size:clamp(1.8rem,5vw,3.1rem);line-height:.94;letter-spacing:.03em}.rift-preflight h3 span{color:#ffd25d}.rift-preflight .rift-rule{margin:15px 0 7px;color:#fff;font-size:clamp(.92rem,2.4vw,1.15rem);font-weight:900;letter-spacing:.02em}.rift-preflight .rift-explain{margin:0 auto;max-width:440px;color:#aebbd2;font-size:.78rem;line-height:1.5}.rift-preflight .rift-count{margin-top:18px;color:#ff9b54;font-size:.72rem;font-weight:950;letter-spacing:.16em}.rift-preflight .rift-count b{display:inline-block;min-width:1.2em;color:#fff;font-size:1.05rem}.reduced-effects .rift-preflight{transition:none}.reduced-effects .rift-preflight-card{box-shadow:none}@media(max-width:640px){.rift-preflight-card{padding:22px 17px 20px}.rift-preflight .rift-explain{font-size:.72rem}}
+    .rift-preflight{position:absolute;inset:0;z-index:80;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 50% 48%,rgba(255,143,72,.16),rgba(3,5,11,.94) 58%);opacity:0;pointer-events:none;transition:opacity .18s ease}.rift-preflight.show{opacity:1;pointer-events:auto}.rift-preflight-card{width:min(520px,92%);padding:24px 22px 22px;border:1px solid rgba(255,155,84,.55);border-radius:22px;background:rgba(8,9,18,.94);box-shadow:0 0 44px rgba(255,126,61,.22),inset 0 0 30px rgba(255,155,84,.05);text-align:center}.rift-preflight .rift-kicker{display:block;margin-bottom:7px;color:#ff9b54;font-size:.68rem;font-weight:950;letter-spacing:.2em}.rift-preflight h3{margin:0;color:#fff;font-size:clamp(1.8rem,5vw,3.1rem);line-height:.94;letter-spacing:.03em}.rift-preflight h3 span{color:#ffd25d}.rift-preflight .rift-rule{margin:14px 0 0;color:#fff;font-size:clamp(.92rem,2.4vw,1.15rem);font-weight:900;letter-spacing:.02em}.rift-preflight .rift-count{margin-top:18px;color:#ff9b54;font-size:.72rem;font-weight:950;letter-spacing:.16em}.rift-preflight .rift-count b{display:inline-block;min-width:1.2em;color:#fff;font-size:1.05rem}.reduced-effects .rift-preflight{transition:none}.reduced-effects .rift-preflight-card{box-shadow:none}@media(max-width:640px){.rift-preflight-card{padding:20px 16px 18px}}
   `;
   document.head.appendChild(style);
 
@@ -22,10 +22,9 @@
   overlay.setAttribute('aria-label', 'Stage 9 orange Rift tutorial');
   overlay.innerHTML = `
     <div class="rift-preflight-card">
-      <span class="rift-kicker">NEW THREAT • ORANGE RIFT</span>
+      <span class="rift-kicker">ORANGE RIFT</span>
       <h3>PINPOINT <span>PULSE</span></h3>
-      <p class="rift-rule">Not too early. Not too late.<br>Pulse as the Rift reaches you.</p>
-      <p class="rift-explain">Orange Rifts exist in both realities. Switching color alone will not save you. Pinpoint pulsing gets you through.</p>
+      <p class="rift-rule">Not too early. Not too late.</p>
       <div class="rift-count">RUN STARTS IN <b>3</b></div>
     </div>`;
   gameCard.appendChild(overlay);
@@ -64,8 +63,8 @@
       }
       clearInterval(countdownTimer);
       countNode.textContent = 'GO';
-      setTimeout(beginStageNine, 420);
-    }, 1000);
+      setTimeout(beginStageNine, 360);
+    }, 850);
   }
 
   document.addEventListener('click', event => {
@@ -91,7 +90,7 @@
   function reinforceHint() {
     const m = (stageLabel?.textContent || '').match(/STAGE\s+(\d+)/i);
     if (Number(m?.[1] || 0) === 9 && bannerHint) {
-      bannerHint.textContent = 'PINPOINT PULSE — not too early, not too late. Pulse as the orange Rift reaches you.';
+      bannerHint.textContent = 'ORANGE RIFT — pulse as it reaches you.';
     }
   }
 
