@@ -4,16 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#050713" />
-  <meta name="description" content="Project Pulse — a fast reality-switching browser runner built as a YouTube Playables prototype." />
+  <meta name="description" content="Project Pulse — an original reality-switching action runner built for YouTube Playables." />
   <title>Project Pulse</title>
+
+  <!-- YouTube Playables SDK must load before any game code. It is a no-op outside Playables. -->
+  <script src="https://www.youtube.com/game_api/v1"></script>
+  <script src="platform.js"></script>
+
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="polish.css" />
-  <script src="bootstrap.js"></script>
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark"></span><strong>PROJECT PULSE</strong><small>ALPHA 0.6</small></div>
+      <div class="brand"><span class="brand-mark"></span><strong>PROJECT PULSE</strong><small>FINAL BUILD 0.7</small></div>
       <div class="top-actions">
         <button id="musicBtn" type="button" aria-pressed="false">MUSIC ON</button>
         <button id="muteBtn" type="button" aria-pressed="false">FX ON</button>
@@ -34,10 +38,10 @@
         <div class="screen-card intro-card">
           <p class="eyebrow">TWO REALITIES. ONE SECOND TO CHOOSE.</p>
           <h1>PROJECT<br><span>PULSE</span></h1>
-          <p class="intro-copy">Auto-run through a collapsing neon world. Jump. Switch reality. Chain perfect pulses. Break the Hunter.</p>
+          <p class="intro-copy">Run through a collapsing neon system. Jump. Switch reality. Chain perfect pulses. Break the Hunter.</p>
           <div class="legend"><div><kbd>SPACE</kbd><span>Jump</span></div><div><kbd>X</kbd><span>Pulse</span></div><div><kbd>P</kbd><span>Pause</span></div></div>
           <div class="menu-actions"><button class="primary" id="startCampaign" type="button">START CAMPAIGN</button><button class="secondary" id="startEndless" type="button">ENDLESS MODE</button></div>
-          <small class="tiny">Mobile: left side = jump • right side = pulse • progress now saves across sessions</small>
+          <small class="tiny">Mobile: left side = jump • right side = pulse • progress is saved automatically</small>
         </div>
       </div>
 
@@ -54,12 +58,11 @@
 
     <section class="below-game">
       <div><strong>CORE LOOP</strong><span>Run → read → pulse → survive → chain → overdrive.</span></div>
-      <div><strong>ALPHA 0.6</strong><span>Polish pass: persistent progress, chapter transitions, accessibility toggle and mobile canvas fix.</span></div>
-      <div><strong>REPLAY GOAL</strong><span>Clear the campaign, destroy the Hunter, then chase S-ranks.</span></div>
+      <div><strong>FINAL BUILD</strong><span>Production save layer, Playables lifecycle hooks and 1.0 campaign expansion in progress.</span></div>
+      <div><strong>REPLAY GOAL</strong><span>Clear the campaign, destroy the Hunter, then chase S-ranks and Endless distance.</span></div>
     </section>
   </main>
-  <script src="game-v3.js"></script>
-  <script src="music.js"></script>
-  <script src="polish.js"></script>
+
+  <script src="loader.js"></script>
 </body>
 </html>
