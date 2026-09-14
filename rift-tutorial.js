@@ -12,9 +12,9 @@
   const TUTORIALS = {
     9: {
       kicker: 'ORANGE RIFT',
-      title: 'PINPOINT <span>PULSE</span>',
-      rule: 'Not too early. Not too late.',
-      hint: 'ORANGE RIFT — pulse as it reaches you.',
+      title: 'RAPIDLY <span>PULSE</span>',
+      rule: 'through the orange blocks.',
+      hint: 'ORANGE RIFT — rapidly pulse through the orange blocks.',
       count: 3,
       prestart: true
     },
