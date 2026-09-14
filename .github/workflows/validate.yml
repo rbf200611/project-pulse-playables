@@ -1,0 +1,38 @@
+name: Validate Project Pulse RC
+
+on:
+  push:
+    branches: [final-1.0]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: JavaScript syntax
+        run: |
+          node --check platform.js
+          node --check loader.js
+          node --check bootstrap.js
+          node --check game-v3.js
+          node --check music.js
+          node --check polish.js
+          node --check final-act.js
+          node --check progression-final.js
+      - name: Required files
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f polish.css
+          test -f final.css
+          test -f RELEASE_CHECKLIST.md
+      - name: Bundle budget
+        run: |
+          bytes=$(find . -type f -not -path './.git/*' -printf '%s\n' | awk '{s+=$1} END {print s+0}')
+          echo "Uncompressed repository payload: $bytes bytes"
+          test "$bytes" -lt 15728640
+      - name: No absolute local asset paths
+        run: |
+          ! grep -R -nE '(src|href)="/(?!/)' --include='*.html' --include='*.js' . || exit 1
