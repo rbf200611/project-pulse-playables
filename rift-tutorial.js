@@ -84,7 +84,8 @@
 
   function reinforceHint(stage = stageNumber()) {
     const tutorial = TUTORIALS[stage];
-    if (tutorial && bannerHint) bannerHint.textContent = tutorial.hint;
+    if (!tutorial || !bannerHint) return;
+    if (bannerHint.textContent !== tutorial.hint) bannerHint.textContent = tutorial.hint;
   }
 
   function finishTutorial(stage) {
@@ -160,15 +161,13 @@
   let lastObservedStage = stageNumber();
   function detectStage() {
     const stage = stageNumber();
-    if (!stage) return;
-    reinforceHint(stage);
-    if (stage === lastObservedStage) return;
+    if (!stage || stage === lastObservedStage) return;
     lastObservedStage = stage;
+    reinforceHint(stage);
     if (stage !== 9 && TUTORIALS[stage]) setTimeout(() => showTutorial(stage), 60);
   }
 
   const observer = new MutationObserver(detectStage);
   if (stageLabel) observer.observe(stageLabel, { childList:true, characterData:true, subtree:true });
-  if (bannerHint) observer.observe(bannerHint, { childList:true, characterData:true, subtree:true });
   reinforceHint();
 })();
